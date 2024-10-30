@@ -121,14 +121,14 @@ public class SpriteXMLSlicer : EditorWindow
         foreach (var subTexture in subTextures)
         {
             SpriteMetaData metaData = new SpriteMetaData();
-            metaData.rect = new Rect(
-                subTexture.x,
-                height - subTexture.height - subTexture.y,
-                subTexture.width,
-                subTexture.height
-            );
+            Vector2 position = new Vector2(subTexture.x, height - subTexture.y - subTexture.height);
+
+            metaData.rect = new Rect(position.x, position.y, subTexture.width, subTexture.height);
             metaData.name = subTexture.name;
-            Debug.Log("Adding metadata for " + metaData.name + " at " + metaData.rect + "");
+            Debug.Log(
+                "Adding metadata for " + metaData.name + " at (data) rect " + metaData.rect + ""
+            );
+            Debug.Log("Data position: " + subTexture.x + ", " + subTexture.y);
             metaDatas.Add(metaData);
         }
 
@@ -136,7 +136,10 @@ public class SpriteXMLSlicer : EditorWindow
 
         textureImporter.textureType = TextureImporterType.Sprite;
         textureImporter.spriteImportMode = SpriteImportMode.Multiple;
-        textureImporter.spritesheet = metaDatas.ToArray();
+        var spritesheet = metaDatas.ToArray();
+        Debug.Log("Setting spritesheet " + spritesheet.Length);
+        textureImporter.spritesheet = spritesheet;
+        Debug.Log("Spritesheet set " + textureImporter.spritesheet.Length);
         textureImporter.SaveAndReimport();
         errorString = string.Empty;
 
